@@ -1,0 +1,4 @@
+# 07th march 2018 inventsekar
+
+# docs.splunk link
+# http://docs.splunk.com/Documentation/Splunk/7.0.2/SearchReference/Rex
