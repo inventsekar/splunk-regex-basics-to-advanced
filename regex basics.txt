@@ -1,0 +1,51 @@
+# 07th march 2018 inventsekar
+
+# docs.splunk link
+# http://docs.splunk.com/Documentation/Splunk/7.0.2/SearchReference/Regex
+<<<<<<< HEAD
+
+
+
+
+# credits - learnsplunk.com
+# ----------- why regex? -----------#
+
+Regex is helpful in transforming your horrible looking machine  logs into beautiful human understandable reports and dashboard -Easy to understand and use.
+
+
+# ----------- How to regex? -----------#
+
+Splunk automatically identifies any fields that match its key/value pair intelligence, which can be found to the left of the search results as below. 
+This can often allow you to start putting together useful data visualizations right out of the box.In below screenshot splunk has automatically extracted host, timestamp etc values. We can use these values for reporting,statistical analysis and creating dashboards.Splunk has inbuilt regex extractor called IFX (Interactive field extractor). By using IFX splunk autodetects useful fields and list them at left side.Splunk IFX can extract fields automatically which are in standard key value pair format i.e. key=value format like username=john etc.But if logs are not in key value pair format then you have to teach splunk to extract fields which you wan using regex.
+
+
+
+#---------------- Regex examples --------------------#
+
+expression	matches
+abc		abc (the "exact" character sequence, but anywhere in the string)
+
+^abc		abc (at the beginning of the string)
+abc$		abc (at the end of the string)
+
+
+=======
+# https://docs.splunk.com/Documentation/Splunk/7.0.2/Knowledge/AboutSplunkregularexpressions
+
+
+
+Description
+The regex command removes results that do not match the specified regular expression.
+
+Syntax
+regex (<field>=<regex-expression> | <field>!=<regex-expression> | <regex-expression>)
+
+
+
+Example 1: Keep only search results whose "_raw" field contains IP addresses in the non-routable class A (10.0.0.0/8). This example uses a negative lookbehind assertion at the beginning of the expression.
+... | regex _raw="(?<!\d)10\.\d{1,3}\.\d{1,3}\.\d{1,3}(?!\d)"
+
+
+Example 2: Keep only the results that match a valid email address. For example, buttercup@example.com.
+...| regex email="/^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/"
+>>>>>>> ed0d74d381be859b5455078d358704c9b133ad3b
