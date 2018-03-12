@@ -1,0 +1,3 @@
+- learnings about Splunk regular expression commands REX and REGEX
+- understanding the difference between REX and REGEX
+- learning from rex syntax, SED commands and more advanced commands
