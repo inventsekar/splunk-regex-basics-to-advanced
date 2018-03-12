@@ -4,6 +4,7 @@
 
 
 rex - Description
+------------------------
 Use this command to either extract fields using regular expression named groups, or replace or substitute characters in a field using sed expressions.
 
 The rex command matches the value of the specified field against the unanchored regular expression and extracts the named groups into fields of the corresponding names. If a field is not specified, the regular expression is applied to the _raw field. Note: Running rex against the _raw field might have a performance impact.
@@ -14,11 +15,33 @@ Use the rex command for search-time field extraction or string replacement and c
 
 
 regex - Description
+--------------------------
 The regex command removes results that do not match the specified regular expression.
-
+or, 
+this regex command prints out the results that match the specified regular expression. 
 #-------------------------------------------------------
 # Normally you would use "rex".
 # regex is, generally less-required than rex. 
 
 # so, as a beginner, if you are got confusion of which one to use "rex or regex", normally you would required to use "rex".
 #-------------------------------------------------------
+
+
+
+
+examples for rex and regex
+------------------------------
+
+Example for REX
+-------------------
+Extract "from" and "to" fields using regular expressions. If a raw event contains "From: Susan To: Bob", then from=Susan and to=Bob.
+
+... | rex field=_raw "From: (?<from>.*) To: (?<to>.*)"
+
+
+
+Example for Regex
+--------------------
+Keep only search results whose "_raw" field contains IP addresses in the non-routable class A (10.0.0.0/8). This example uses a negative lookbehind assertion at the beginning of the expression.
+
+... | regex _raw="(?<!\d)10\.\d{1,3}\.\d{1,3}\.\d{1,3}(?!\d)"
