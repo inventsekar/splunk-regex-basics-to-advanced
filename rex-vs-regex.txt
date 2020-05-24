@@ -1,17 +1,27 @@
-# 07th march 2018 inventsekar
+# Edit 1 - 07th march 2018 inventsekar
 # to understand the basic differences between rex and regex
-
+# Edit 2 - little editings - 24th May 2020
 
 
 rex - Description
 ------------------------
-Use this command to either extract fields using regular expression named groups, or replace or substitute characters in a field using sed expressions.
+- "rex" is the short form of "regular expression".
+- This command is used for "search time field extractions".
+- when using "mode=sed", we can do search and replace tasks.
+This sed-syntax is also used to mask sensitive data at index-time.
+For example, hiding the credit card / SSN numbers while reading credit card / SSN transaction logs.
+(Read about using sed to anonymize data in the Getting Data In Manual).
+- Note: Running rex against the _raw field might have a performance impact.
 
-The rex command matches the value of the specified field against the unanchored regular expression and extracts the named groups into fields of the corresponding names. If a field is not specified, the regular expression is applied to the _raw field. Note: Running rex against the _raw field might have a performance impact.
+There are six broad types for all of the search commands: 
+distributable streaming, centralized streaming, transforming, generating, orchestrating and dataset processing. 
+These types are not mutually exclusive. A command might be streaming or transforming, and also generating.
+- A streaming command operates on each event as the event is returned by a search. (ex: head, eval, lookup)
+- A generating command generates events or reports from one or more indexes without transforming the events(ex: eventcount, makeresults)
+- A transforming command orders the results into a data table(ex: addtotals, stats, rare, table)
+- An Orchestrating command control some aspect of how a search is processed. They do not directly affect the final result set of the search. For example, you might apply an orchestrating command to a search to enable or disable a search optimization that helps the overall search complete faster.
+- A dataset processing command is a command that requires the entire dataset before the command can run.
 
-When mode=sed, the given sed expression used to replace or substitute characters is applied to the value of the chosen field. If a field is not specified, the sed expression is applied to _raw. This sed-syntax is also used to mask sensitive data at index-time. Read about using sed to anonymize data in the Getting Data In Manual.
-
-Use the rex command for search-time field extraction or string replacement and character substitution.
 
 
 regex - Description
@@ -29,7 +39,7 @@ this regex command prints out the results that match the specified regular expre
 
 
 
-examples for rex and regex
+Examples for rex and regex
 ------------------------------
 
 Example for REX
