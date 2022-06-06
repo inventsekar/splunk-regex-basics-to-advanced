@@ -1,0 +1,158 @@
+
+Chapter 1 - Baby Steps into Splunk Rex
+----------------------------------------
+The wikipedia defenition for "regular expression" is:
+A regular expression is a sequence of characters that specifies a search pattern in text.
+
+In this chapter we will see and learn some very basic rex commands, lets go stright into rex.
+
+Why do we need regular expressions(rex)?
+Let us assume my user id as SplunkBoys. If i would like to understand if my username has appeared on the Application Error Logs are or not, simply i can search with my username "SplunkBoys". But if i want to do this same task to my team mate, i should know his username. So first i have to find out / confirm his username. So, now, i will need to search the logs which contain all usernames and then find out my team mate's username first. This is where we need Regular Expressions. 
+
+If we know what we need to search(the "keyword"), then, we can simply and directly search with the "keyword". If we do not know the "keyword", but if we know "where" the keyword appears in the logs, then we can use the "Regular Expressions" to find the keyword and its corresponding values. 
+
+
+For our learning, let us assume that the sample log as: 
+Mon Mar 19 20:15:53 2018 Info: Delayed: DCID 8414166 MID 19410657 From: <Manish_Das@example.com> To: <dash@buttercupgames.com> RID 0 - 4.3.2 - Not accepting messages at this time ('421', ['4.3.2 try again later']) 
+
+
+Splunk Rex term \w
+----------------------
+To Capture "Mon" to variable "day":
+
+|makeresults | eval log="Mon Mar 19 20:15:53 2018 Info: Delayed: DCID 8414166 MID 19410657 From: <Manish_Das@example.com> To: <dash@buttercupgames.com> RID 0 - 4.3.2 - Not accepting messages at this time ('421', ['4.3.2 try again later'])" 
+|rex field=log "(?<day>\w)"
+|table day
+
+Output:
+
+day
+M
+
+Same Output:
+|makeresults | eval log="Mon Mar 19 20:15:53 2018 Info: Delayed: DCID 8414166 MID 19410657 From: <Manish_Das@example.com> To: <dash@buttercupgames.com> RID 0 - 4.3.2 - Not accepting messages at this time ('421', ['4.3.2 try again later'])" 
+|rex field=log "(?<day>\w\w\w)"
+|table day
+
+Output:
+
+day
+Mon
+
+Same Output
+|makeresults | eval log="Mon Mar 19 20:15:53 2018 Info: Delayed: DCID 8414166 MID 19410657 From: <Manish_Das@example.com> To: <dash@buttercupgames.com> RID 0 - 4.3.2 - Not accepting messages at this time ('421', ['4.3.2 try again later'])" 
+|rex field=log "(?<day>\w+)"
+|table day
+
+Same output day=Mon
+
+
+Splunk Rex term \w+
+----------------------
+To Capture "Mar" to variable "month":
+
+|makeresults | eval log="Mon Mar 19 20:15:53 2018 Info: Delayed: DCID 8414166 MID 19410657 From: <Manish_Das@example.com> To: <dash@buttercupgames.com> RID 0 - 4.3.2 - Not accepting messages at this time ('421', ['4.3.2 try again later'])" 
+|rex field=log "\w+\s(?<month>\w+)"
+|table month
+
+Output:
+
+month
+Mar
+
+
+Splunk Rex term \d
+----------------------
+To Capture the time (20:15:53)
+
+|makeresults | eval log="Mon Mar 19 20:15:53 2018 Info: Delayed: DCID 8414166 MID 19410657 From: <Manish_Das@example.com> To: <dash@buttercupgames.com> RID 0 - 4.3.2 - Not accepting messages at this time ('421', ['4.3.2 try again later'])" 
+|rex field=log "\d+\s(?<time>\d\d\:\d\d\:\d\d)"
+|table time
+
+Output:
+time
+20:15:53
+
+Same results:
+----------------
+|makeresults | eval log="Mon Mar 19 20:15:53 2018 Info: Delayed: DCID 8414166 MID 19410657 From: <Manish_Das@example.com> To: <dash@buttercupgames.com> RID 0 - 4.3.2 - Not accepting messages at this time ('421', ['4.3.2 try again later'])" 
+|rex field=log "\d+\s(?<time>\d+\:\d+\:\d+)"
+|table time
+
+|makeresults | eval log="Mon Mar 19 20:15:53 2018 Info: Delayed: DCID 8414166 MID 19410657 From: <Manish_Das@example.com> To: <dash@buttercupgames.com> RID 0 - 4.3.2 - Not accepting messages at this time ('421', ['4.3.2 try again later'])" 
+|rex field=log "\d+\s(?<time>\d+\D\d+\D\d+)"
+|table time
+
+|makeresults | eval log="Mon Mar 19 20:15:53 2018 Info: Delayed: DCID 8414166 MID 19410657 From: <Manish_Das@example.com> To: <dash@buttercupgames.com> RID 0 - 4.3.2 - Not accepting messages at this time ('421', ['4.3.2 try again later'])" 
+|rex field=log "\d+\s(?<time>\d+.\d+.\d+)"
+|table time
+
+
+Groups, quantifiers, and alternation
+------------------------------------------
+
+*	Match zero or more times.	
+\w*	Matches zero or more word characters.
+
+
+
+Splunk Rex term \w*
+----------------------
+to capture day "Mon"
+
+|makeresults | eval log="Mon Mar 19 20:15:53 2018 Info: Delayed: DCID 8414166 MID 19410657 From: <Manish_Das@example.com> To: <dash@buttercupgames.com> RID 0 - 4.3.2 - Not accepting messages at this time ('421', ['4.3.2 try again later'])" 
+|rex field=log "(?<day>\w*)"
+|table day
+
+Same output day=Mon
+
+
+ ?	Match zero or one time.	
+\d\d\d-?\d\d-?\d\d\d\d	Matches a Social Security Number with or without dashes.
+
+
+to capture the version number 4.3.2:
+|makeresults | eval log="Mon Mar 19 20:15:53 2018 Info: Delayed: DCID 8414166 MID 19410657 From: <Manish_Das@example.com> To: <dash@buttercupgames.com> RID 0 - 4.3.2 - Not accepting messages at this time ('421', ['4.3.2 try again later'])" 
+|rex field=log "\-\s(?<version>\d\S\d\S\d)"
+|table version
+
+output
+version
+4.3.2
+
+Same Output:
+|makeresults | eval log="Mon Mar 19 20:15:53 2018 Info: Delayed: DCID 8414166 MID 19410657 From: <Manish_Das@example.com> To: <dash@buttercupgames.com> RID 0 - 4.3.2 - Not accepting messages at this time ('421', ['4.3.2 try again later'])" 
+|rex field=log "\-\s(?<version>\d.?\d.?\d)"
+|table version
+
+
+
+Splunk Rex Character Class []
+----------------------------------
+[ ]	Square brackets define character classes.	
+[a-z0-9#]	Matches any character that is a through z, 0 through 9, or #.
+
+to capture the year
+|makeresults | eval log="Mon Mar 19 20:15:53 2018 Info: Delayed: DCID 8414166 MID 19410657 From: <Manish_Das@example.com> To: <dash@buttercupgames.com> RID 0 - 4.3.2 - Not accepting messages at this time ('421', ['4.3.2 try again later'])" 
+|rex field=log "\d\d\:\d\d\:\d\d\s(?<year>[0-9]+)"
+|table year
+
+output:
+year
+2018
+
+
+
+Splunk Rex repetitions {}
+----------------------------------
+{ }	Curly brackets define repetitions.	
+\d{3,5}	Matches a string of 3 to 5 digits in length.
+
+
+|makeresults | eval log="Mon Mar 19 20:15:53 2018 Info: Delayed: DCID 8414166 MID 19410657 From: <Manish_Das@example.com> To: <dash@buttercupgames.com> RID 0 - 4.3.2 - Not accepting messages at this time ('421', ['4.3.2 try again later'])" 
+|rex field=log "\d\d\:\d\d\:\d\d\s(?<year>[0-9]{4})"
+|table year
+
+output:
+year
+2018
